@@ -43,7 +43,7 @@ class MIO3SST_OT_snap_to_bone(bpy.types.Operator):
 
         selected_verts = [v for v in bm.verts if v.select]
         if obj.use_mesh_mirror_x:
-            selected_verts.extend(get_symmetry_verts(selected_verts, bm.verts))
+            selected_verts.extend(find_symmetry_verts(selected_verts, bm.verts))
 
         selected_edges = [e for e in bm.edges if e.select]
         islands = get_islands(selected_edges, selected_verts)
@@ -108,7 +108,7 @@ class MIO3SST_OT_align_to_bone(bpy.types.Operator):
         armature = obj.find_armature()
         selected_edges = [e for e in bm.edges if e.select]
         if obj.use_mesh_mirror_x:
-            selected_edges.extend(get_symmetry_edges(selected_edges, bm.edges, bm.verts))
+            selected_edges.extend(find_symmetry_edges(selected_edges, bm.edges, bm.verts))
 
         edge_loops = find_edge_loops(selected_edges)
 
@@ -139,7 +139,7 @@ class MIO3SST_OT_align_to_bone(bpy.types.Operator):
         return {"FINISHED"}
 
 
-def get_symmetry_verts(selected_verts, verts):
+def find_symmetry_verts(selected_verts, verts):
     symm_verts = []
     kd = kdtree.KDTree(len(verts))
     for i, v in enumerate(verts):
@@ -156,7 +156,7 @@ def get_symmetry_verts(selected_verts, verts):
     return symm_verts
 
 
-def get_symmetry_edges(selected_edges, edges, verts):
+def find_symmetry_edges(selected_edges, edges, verts):
     symm_edges = []
     kd = kdtree.KDTree(len(verts))
     for i, v in enumerate(verts):
@@ -246,7 +246,7 @@ def find_bone(obj, armature, selected_verts):
 
 
 def find_bone_by_nearest(obj, armature, selected_verts):
-    bone_head_coords, bone_tail_coords = get_bone_world_cos(armature)
+    bone_head_coords, bone_tail_coords = find_bone_world_cos(armature)
 
     nearest_bone = None
     min_distance = float("inf")
@@ -264,7 +264,7 @@ def find_bone_by_nearest(obj, armature, selected_verts):
     return nearest_bone
 
 
-def get_bone_world_cos(armature):
+def find_bone_world_cos(armature):
     armature_matrix_world = armature.matrix_world
     bone_head_coords = {}
     bone_tail_coords = {}
