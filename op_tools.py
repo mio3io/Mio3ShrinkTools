@@ -1,7 +1,7 @@
 import bpy
 import bmesh
 from mathutils import Vector, kdtree
-from bpy.props import EnumProperty
+from bpy.props import EnumProperty, BoolProperty
 from bpy.app.translations import pgettext
 
 
@@ -10,6 +10,8 @@ class MIO3SST_OT_snap_to_bone(bpy.types.Operator):
     bl_label = "Snapping a vertex to a bone"
     bl_description = "DESC Snapping a vertex to a bone"
     bl_options = {"REGISTER", "UNDO"}
+
+    volume: BoolProperty(name="Leave the volume", default=True)
 
     bone_type: EnumProperty(
         name="Type",
@@ -68,7 +70,8 @@ class MIO3SST_OT_snap_to_bone(bpy.types.Operator):
                     proj_vec = vert_to_bone.project(bone_vec)
                     snapped_pos = bone_head + proj_vec
 
-                    new_world_pos = vert_world_co.lerp(snapped_pos, 0.95)
+                    factor = 0.97 if self.volume else 1
+                    new_world_pos = vert_world_co.lerp(snapped_pos, factor)
                     vert.co = obj.matrix_world.inverted() @ new_world_pos
 
         bmesh.update_edit_mesh(obj.data)

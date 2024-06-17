@@ -125,7 +125,7 @@ class MIO3_OT_auto_shrink(bpy.types.Operator):
                     total_weight += weight
 
             if total_weight > 0:
-                factor = 0.95 if self.volume else 1
+                factor = 0.97 if self.volume else 1
                 vert.co = obj_world_mat_inv @ vert_world_co.lerp(
                     total_weighted_pos / total_weight, factor
                 )
