@@ -12,7 +12,7 @@ class MIO3SST_OT_snap_to_bone(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     volume: BoolProperty(name="Leave the volume", default=True)
-    align: BoolProperty(name="Align edge loops", default=True)
+    align: BoolProperty(name="Align edge loops", default=False, options={"HIDDEN"})
 
     bone_type: EnumProperty(
         name="Type",
@@ -96,8 +96,8 @@ class MIO3SST_OT_snap_to_bone(bpy.types.Operator):
     def draw(self, context):
         layout = self.layout
         layout.prop(self, "volume")
-        if context.active_object.data.total_face_sel < 1:
-            layout.prop(self, "align")
+        # if context.active_object.data.total_face_sel < 1:
+        #     layout.prop(self, "align")
         row = layout.row()
         row.prop(self, "bone_type", expand=True)
 
