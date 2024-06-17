@@ -12,6 +12,7 @@ class MIO3SST_OT_snap_to_bone(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     volume: BoolProperty(name="Leave the volume", default=True)
+    align: BoolProperty(name="Align edge loops", default=True)
 
     bone_type: EnumProperty(
         name="Type",
@@ -39,6 +40,7 @@ class MIO3SST_OT_snap_to_bone(bpy.types.Operator):
 
     def execute(self, context):
         obj = context.active_object
+        self.align_mode = True if obj.data.total_face_sel < 1 and self.align else False
 
         bm = bmesh.from_edit_mesh(obj.data)
         bm.verts.ensure_lookup_table()
@@ -63,12 +65,25 @@ class MIO3SST_OT_snap_to_bone(bpy.types.Operator):
                 bone_tail = armature.matrix_world @ bone.tail_local
                 bone_vec = bone_tail - bone_head
 
+                bone_matrix = armature.matrix_world @ bone.matrix_local
+                center = sum([obj.matrix_world @ v.co for v in verts], Vector()) / len(
+                    verts
+                )
+                bone_matrix_inv = bone_matrix.inverted()
+
                 for vert in verts:
                     vert_world_co = obj.matrix_world @ vert.co
 
                     vert_to_bone = vert_world_co - bone_head
                     proj_vec = vert_to_bone.project(bone_vec)
                     snapped_pos = bone_head + proj_vec
+
+                    # 整列
+                    if self.align_mode:
+                        bone_space_co = bone_matrix_inv @ snapped_pos
+                        bone_space_center = bone_matrix_inv @ center
+                        bone_space_co.y = bone_space_center.y
+                        snapped_pos = bone_matrix @ bone_space_co
 
                     factor = 0.97 if self.volume else 1
                     new_world_pos = vert_world_co.lerp(snapped_pos, factor)
@@ -77,6 +92,14 @@ class MIO3SST_OT_snap_to_bone(bpy.types.Operator):
         bmesh.update_edit_mesh(obj.data)
 
         return {"FINISHED"}
+
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, "volume")
+        if context.active_object.data.total_face_sel < 1:
+            layout.prop(self, "align")
+        row = layout.row()
+        row.prop(self, "bone_type", expand=True)
 
 
 class MIO3SST_OT_align_to_bone(bpy.types.Operator):
