@@ -52,11 +52,13 @@ class MIO3_OT_auto_shrink(bpy.types.Operator):
         obj_world_mat_inv = obj_world_mat.inverted()
         arm_world_mat = armature.matrix_world
 
-        # 表示中のデフォームボーンを抽出
-        selected_bones = [bone for bone in armature.data.bones if not bone.hide and bone.use_deform]
+        # 対象ボーンを抽出
+        selected_bones = [bone for bone in armature.data.bones if bone.select and bone.use_deform]
+        if not selected_bones:
+            selected_bones = [bone for bone in armature.data.bones if not bone.hide and bone.use_deform]
 
         if not selected_bones:
-            self.report({"ERROR"}, "No deform bone shown")
+            self.report({"ERROR"}, "No deform bone")
             return {"CANCELLED"}
 
         # 事前計算
