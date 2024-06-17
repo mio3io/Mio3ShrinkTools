@@ -7,8 +7,6 @@
 [Code > Download ZIP](https://github.com/mio3io/Mio3ShrinkTools/archive/master.zip) から ZIP ファイルをダウンロードします。
 Blender の `Edit > Preferences > Addons > Install` を開き、ダウンロードしたアドオンの ZIP ファイルを選択してインストールボタンを押します。インストール後、該当するアドオンの左側についているチェックボックスを ON にします。
 
-![](https://raw.githubusercontent.com/mio3io/resources/blender-addons/shrink_20240617.png)
-
 ## 機能
 
 自動作成機能と手動作成＆調整用のツールがあります
