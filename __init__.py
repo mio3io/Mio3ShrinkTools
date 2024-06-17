@@ -70,7 +70,7 @@ translation_dict = {
         ("*", "Leave the volume"): "ボリュームを残す",
         ("*", "Selected only"): "選択した頂点のみ",
         ("*", "Type Snap"): "スナップを優先",
-        ("*", "Type Tnterpolation"): "スナップを優先",
+        ("*", "Type Tnterpolation"): "補間を優先",
 
         ("*", "Armature modifier not set"): "アーマチュアが設定されていません",
         ("*", "Register ShapeKey for Shrink"): "シュリンク用シェイプキーを登録してください",
