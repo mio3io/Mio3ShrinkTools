@@ -6,7 +6,7 @@ from bpy.app.translations import pgettext
 
 
 class MIO3SST_OT_snap_to_bone(bpy.types.Operator):
-    bl_idname = "mesh.mio3_snap_mesh_to_bones"
+    bl_idname = "mesh.mio3_snap_to_bone"
     bl_label = "Snapping a vertex to a bone"
     bl_description = "DESC Snapping a vertex to a bone"
     bl_options = {"REGISTER", "UNDO"}
@@ -77,7 +77,7 @@ class MIO3SST_OT_snap_to_bone(bpy.types.Operator):
 
 
 class MIO3SST_OT_align_to_bone(bpy.types.Operator):
-    bl_idname = "mesh.mio3_align_mesh_to_bone"
+    bl_idname = "mesh.mio3_align_to_bone"
     bl_label = "Align edge loops"
     bl_description = "DESC Align edge loops"
     bl_options = {"REGISTER", "UNDO"}
