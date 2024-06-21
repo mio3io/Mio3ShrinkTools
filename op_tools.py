@@ -26,7 +26,7 @@ class MIO3SST_OT_snap_to_bone(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return context.object is not None and context.object.mode == "EDIT"
+        return context.active_object is not None and context.active_object.mode == "EDIT"
 
     def invoke(self, context, event):
         obj = context.active_object
@@ -51,7 +51,7 @@ class MIO3SST_OT_snap_to_bone(bpy.types.Operator):
             selected_verts.extend(find_symmetry_verts(selected_verts, bm.verts))
 
         selected_edges = [e for e in bm.edges if e.select]
-        islands = get_islands(selected_edges, selected_verts)
+        islands = get_islands(selected_verts, selected_edges)
 
         armature = obj.find_armature()
 
@@ -101,7 +101,7 @@ class MIO3SST_OT_align_to_bone(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return context.object is not None and context.object.mode == "EDIT"
+        return context.active_object is not None and context.active_object.mode == "EDIT"
 
     def invoke(self, context, event):
         obj = context.active_object
@@ -197,10 +197,10 @@ def find_symmetry_edges(selected_edges, edges, verts):
     return symm_edges
 
 
-def get_islands(selected_edges, verts):
+def get_islands(selected_verts, selected_edges):
     islands = []
-    while verts:
-        v = verts.pop()
+    while selected_verts:
+        v = selected_verts.pop()
         island = {v}
         stack = [v]
         while stack:
@@ -211,7 +211,7 @@ def get_islands(selected_edges, verts):
                     if ov not in island:
                         island.add(ov)
                         stack.append(ov)
-                        verts.remove(ov)
+                        selected_verts.remove(ov)
         islands.append(list(island))
     return islands
 
